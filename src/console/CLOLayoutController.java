@@ -1,0 +1,367 @@
+package console;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.net.URL;
+import java.util.ResourceBundle;
+
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeView;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.BackgroundPosition;
+import javafx.scene.layout.BackgroundRepeat;
+import javafx.scene.layout.BackgroundSize;
+import javafx.scene.layout.HBox;
+import javafx.scene.web.WebEngine;
+import javafx.scene.web.WebView;
+
+import resources.CSResource;
+
+public class CLOLayoutController implements Initializable {
+
+	ObservableList<String> loginList = FXCollections.observableArrayList(CSResource.strGUEST, CSResource.strFACULTY,
+			CSResource.strADMINISTOR);
+
+	private final Node cseIcon01 = new ImageView(new Image(getClass().getResourceAsStream("CSE118.png")));
+	private final Node cseIcon02 = new ImageView(new Image(getClass().getResourceAsStream("CSE02.png")));
+	private final Node cseIcon03 = new ImageView(new Image(getClass().getResourceAsStream("CSE03.png")));
+
+	@FXML
+	private WebView webViewer;
+	@FXML
+	private HBox hbTop;
+	@FXML
+	private ComboBox cbSignOn;
+	@FXML
+	private TreeView tvCSELOs;
+	@FXML
+	private TreeView tvChapLOs;
+	@FXML
+	private TextField difNum;
+	@FXML
+	private TextField lenNum;
+	@FXML
+	private AnchorPane testPane;
+	@FXML
+	private TextArea createdTest;
+	@FXML
+	private Button cancelBtn;
+
+	// private ScrollPane spContainer;
+	WebView browser = null;
+
+	@Override
+	public void initialize(URL location, ResourceBundle resources) {
+
+		final String currWorkPath = System.getProperty("user.dir");
+		testPane.setVisible(false);
+
+		try {
+
+			/*
+			 * if (cseIcon01 == null) { String icon01Path = currWorkPath +
+			 * "\\bin\\resources\\images\\" + CSResource.strCSE118Icon; cseIcon01 = new
+			 * ImageView(new Image(new FileInputStream(icon01Path)));
+			 * 
+			 * String icon02Path = currWorkPath + "\\bin\\resources\\images\\" +
+			 * CSResource.strCSE118BKGD02; cseIcon02 = new ImageView(new Image(new
+			 * FileInputStream(icon02Path)));
+			 * 
+			 * String icon03Path = currWorkPath + "\\bin\\resources\\images\\" +
+			 * CSResource.strCSE118BKGD03; cseIcon03 = new ImageView(new Image(new
+			 * FileInputStream(icon03Path))); }
+			 */
+
+			String pathToLogoImage = currWorkPath + "/bin/resources/images/" + CSResource.strCSE118LOGO;
+			FileInputStream scccLogoImage = new FileInputStream(pathToLogoImage);
+			// create a image
+			Image image = new Image(scccLogoImage);
+			BackgroundImage backgroundimage = new BackgroundImage(image, BackgroundRepeat.NO_REPEAT,
+					BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
+			Background background = new Background(backgroundimage);
+			hbTop.setBackground(background);
+			// hbTop.setStyle("-fx-background-color:rgba(200, 200, 200, 0.5);");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		cbSignOn.setValue(CSResource.strGUEST);
+		cbSignOn.setItems(loginList);
+
+		initializeCLOTreeView();
+		// setupCLOTrees();
+		loadWebPage(webViewer, null);
+	}
+
+	@FXML
+	private void testScene(ActionEvent event) {
+		webViewer.setDisable(true);
+		webViewer.setVisible(false);
+
+		testPane.setDisable(false);
+		testPane.setVisible(true);
+		cancelBtn.setVisible(false);
+		event.consume();
+	}
+
+	@FXML
+	private void cancelTest(ActionEvent event) {
+		webViewer.setDisable(false);
+		webViewer.setVisible(true);
+
+		testPane.setDisable(true);
+		testPane.setVisible(false);
+		event.consume();
+	}
+
+	@FXML
+	private void cancel(ActionEvent event) {
+		webViewer.setDisable(false);
+		webViewer.setVisible(true);
+
+		testPane.setDisable(true);
+		testPane.setVisible(false);
+		createdTest.setDisable(true);
+		createdTest.setVisible(false);
+		cancelBtn.setVisible(false);
+		event.consume();
+
+	}
+
+	@FXML
+	private void createTest(ActionEvent event) {
+		Alert alert = new Alert(AlertType.WARNING);
+		int dif = -1;
+		int len = -1;
+		try {
+			dif = Integer.parseInt(difNum.getText());
+			len = Integer.parseInt(lenNum.getText());
+			if (dif < 0 || dif > 5) {
+				event.consume();
+				alert.setContentText("Difficulty not within range");
+				alert.show();
+
+			} else if (len < 5 || len > 25) {
+				event.consume();
+				alert.setContentText("Length not within range");
+				alert.show();
+
+			} else {
+				Test test = new Test(dif, len);
+				createdTest.setText(test.testMe());
+				createdTest.setVisible(true);
+				createdTest.setDisable(false);
+				cancelBtn.setVisible(true);
+			}
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+			alert.setContentText("Not a number!");
+			alert.show();
+			event.consume();
+		}
+
+	}
+
+	private void initializeCLOTreeView() {
+
+		TreeItem<String> rootNode = new TreeItem<>("Course CSE118", cseIcon02);
+		rootNode.setExpanded(true);
+		tvChapLOs.setRoot(rootNode);
+		tvChapLOs.setStyle("-fx-font-size: 14px;-fx-font-weight: bold;");
+
+		for (int i = 0; i < CSResource.cseCLOs.length; i++) {
+			if (CSResource.cseCLOs[i].contains("Contents")) {
+				TreeItem<String> item = this.makeTreeItemWithIcon(CSResource.cseCLOs[i], rootNode, cseIcon02);
+				if (item != null) {
+					item.setExpanded(true);
+					for (int j = 0; j < CSResource.chapObjs.length; j++) {
+						this.makeTreeItem(CSResource.chapObjs[j], item);
+					}
+				}
+			} else {
+				if (i == 0)
+					this.makeTreeItemWithIcon(CSResource.cseCLOs[i], rootNode, cseIcon01);
+				else
+					this.makeTreeItemWithIcon(CSResource.cseCLOs[i], rootNode, cseIcon03);
+			}
+		}
+
+		tvChapLOs.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<TreeItem<String>>() {
+			public void changed(ObservableValue<? extends TreeItem<String>> changed, TreeItem<String> oldVal,
+					TreeItem<String> newVal) {
+				if (newVal != null) {
+					String itemTitle = newVal.getValue();
+					loadWebPage(webViewer, newVal.getValue());
+					// System.out.println("itme: " + itemTitle);
+				}
+			}
+		});
+	}
+
+	private void setupCLOTrees() {
+		// treeview: course learning outcomes
+		TreeItem<String> rootCLOItem = new TreeItem<>("CSE118 Learning Outcomes");
+		rootCLOItem.setExpanded(false);
+		tvCSELOs.setRoot(rootCLOItem);
+		tvCSELOs.setStyle("-fx-font-size: 12px;-fx-font-weight: bold;");
+		tvCSELOs.setVisible(true);
+
+		tvCSELOs.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<TreeItem<String>>() {
+			public void changed(ObservableValue<? extends TreeItem<String>> changed, TreeItem<String> oldVal,
+					TreeItem<String> newVal) {
+				if (newVal != null) {
+					String itemTitle = newVal.getValue();
+					// setupWebview(spContainer, itemTitle, false);
+					// System.out.println("itme: " + itemTitle);
+				}
+			}
+		});
+
+		// treeview: learning objectives for each chapter
+		TreeItem<String> rootLOItems = new TreeItem<>("Learning Objectives");
+		rootLOItems.setExpanded(true);
+		for (int i = 0; i < CSResource.chapObjs.length; i++) {
+			makeTreeItem(CSResource.chapObjs[i], rootLOItems);
+		}
+		tvChapLOs.setRoot(rootLOItems);
+		tvChapLOs.setStyle("-fx-font-size: 12px;-fx-font-weight: bold;");
+		tvChapLOs.setVisible(true);
+		tvChapLOs.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<TreeItem<String>>() {
+			public void changed(ObservableValue<? extends TreeItem<String>> changed, TreeItem<String> oldVal,
+					TreeItem<String> newVal) {
+				if (newVal != null) {
+					String itemTitle = newVal.getValue();
+					loadWebPage(webViewer, newVal.getValue());
+					System.out.println("itme: " + itemTitle);
+				}
+			}
+		});
+
+		tvCSELOs.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+			TreeItem<String> nv = (TreeItem<String>) (newValue);
+			// System.out.println("Selected Text : " + nv.getValue());
+		});
+
+		tvCSELOs.getFocusModel().focusedItemProperty().addListener((observable, oldValue, newValue) -> {
+			TreeItem<String> nv = (TreeItem<String>) (newValue);
+			// System.out.println("Focused Text : " + nv.getValue());
+		});
+
+	}
+
+	private TreeItem<String> makeTreeItem(String itmeTitle, TreeItem<String> parent) {
+		TreeItem<String> newItem = new TreeItem<>(itmeTitle);
+		boolean result = parent.getChildren().add(newItem);
+		return result ? newItem : null;
+	}
+
+	private TreeItem<String> makeTreeItemWithIcon(String itmeTitle, TreeItem<String> parent, Node icon) {
+		TreeItem<String> newItem = (icon != null) ? new TreeItem<>(itmeTitle, icon) : new TreeItem<>(itmeTitle);
+		boolean result = parent.getChildren().add(newItem);
+		return result ? newItem : null;
+	}
+
+	private void loadWebPage(WebView webViewer, String itemIdxStr) {
+		if (webViewer != null) {
+			WebEngine webEngine = webViewer.getEngine();
+			webViewer.setVisible(true);
+			webViewer.setDisable(false);
+			String fileName = getCLOURL(itemIdxStr);
+			String urlStr = "";
+			try {
+				URL url = new File(fileName).toURI().toURL();
+				urlStr = url.toString();
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+			if (urlStr != null) {
+				webEngine.load(urlStr);
+			}
+		}
+	}
+
+	private void setupWebview(ScrollPane parent, String itemIdxStr) {
+		// parent.setStyle("-fx-background-color: rgba(50, 180, 255, 0.550)");
+
+		if (browser == null) {
+			browser = new WebView();
+		}
+		// browser.setBlendMode(BlendMode.DARKEN);
+
+		// browser.setStyle("-fx-background-color: rgba(50, 180, 255, 0.550)");
+		WebEngine webEngine = browser.getEngine();
+
+		String urlStr = null;
+		if (itemIdxStr == null) {
+			urlStr = getClass().getResource("CSE118-CLOs.html").toString();
+		} else {
+			urlStr = getClass().getResource(itemIdxStr).toString();
+		}
+
+		if (urlStr != null) {
+			webEngine.load(urlStr);
+			parent.setContent(browser);
+		}
+	}
+
+	private String getCLOURL(String itemStr) {
+
+		final String currDir = System.getProperty("user.dir");
+
+		// default filename: "CSE118-CLOs.html"
+		String urlName = CSResource.strCSE118CLOSFILE;
+
+		if (itemStr != null) {
+			int idx = itemStr.indexOf("Chap0");
+			if (idx > 0) {
+				// filename: CSE118_Chap0XObjectives.html
+				String chapIdx = itemStr.substring(idx + 5, idx + 6);
+				urlName = CSResource.strCSE118LOSLEAD + chapIdx + CSResource.strCSE118LOSTAIL;
+			} else if (itemStr.indexOf("Mapping") > 0) {
+				urlName = CSResource.strCSE118CLOMAPPINGFILE;
+			} else {
+				urlName = CSResource.strNEWTEST;
+			}
+		}
+
+		return currDir + "/bin/resources/htmls/" + urlName;
+	}
+
+	private void setupWebview(ScrollPane parent, String itemStr, boolean dummy) {
+
+		// filename: CSE118_Chap0XObjectives.html
+		int idx = itemStr.indexOf("Chap0");
+		if (idx > 0) {
+			String chapIdx = itemStr.substring(idx + 5, idx + 6);
+			String fileName = "CSE118_Chap0" + chapIdx + "_LOS.html";
+			setupWebview(parent, fileName);
+			return;
+		}
+
+		idx = itemStr.indexOf("Learning Outcomes");
+		if (idx > 0) {
+			String fileName = "CSE118-CLOs.html";
+			setupWebview(parent, fileName);
+		}
+	}
+
+}
