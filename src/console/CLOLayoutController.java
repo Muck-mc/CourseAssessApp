@@ -2,6 +2,8 @@ package console;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -148,7 +150,7 @@ public class CLOLayoutController implements Initializable {
 	}
 
 	@FXML
-	private void createTest(ActionEvent event) {
+	private void createTest(ActionEvent event) throws IOException {
 		Alert alert = new Alert(AlertType.WARNING);
 		int dif = -1;
 		int len = -1;

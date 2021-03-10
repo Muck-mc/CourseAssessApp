@@ -1,23 +1,155 @@
 package console;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.List;
+
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.apache.poi.xwpf.usermodel.XWPFParagraph;
+import org.apache.poi.xwpf.usermodel.XWPFRun;
+
 public class Test {
 	
 	private int difNum;
 	private int lenNum;
+	private String[] testQuestions;
 	
-	
-	public Test(int difNum, int lenNum) {
+	public Test(int difNum, int lenNum) throws FileNotFoundException {
 		super();
 		this.difNum = difNum;
 		this.lenNum = lenNum;
+		
+//		this.testQuestions = algorithm.RunAlg(); // this will return a string arr of questions for now im using a relative folder in next line
+		this.testQuestions = listFileNames("src/QuestionsForPreliminaryTesting");
 	}
 
 
-	public String testMe() {
+	public String testMe() throws IOException {
 		System.out.println("testing");
 		System.out.println(difNum);
 		System.out.println(lenNum);
-		return "testing " + "Dif:"+difNum + " len:" + lenNum;
+		
+		writeFile("TestCreated/", "UneditedTestCreated.docx", testQuestions, "Professor Li", "CSE118");
+		
+		String testFormatted = new String();
+		
+		testFormatted += "Name:_________ \nProfessor Li \nCSE118\n\n"; // this will allow an input of Prof Name
+		
+		for (int i = 0; i < this.testQuestions.length;i++) {
+			testFormatted += i+". " + readFile(testQuestions[i]) + "\n\n";
+		}
+//		return "testing " + "Dif:"+difNum + " len:" + lenNum +"\n" + testFormatted;
+		return testFormatted;
 	}
 	
+	
+	/* 
+	 * Maven dependencies pom.xml file
+	 * 
+   <dependencies>
+		<!-- https://mvnrepository.com/artifact/org.apache.poi/poi-ooxml -->
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi-ooxml</artifactId>
+			<version>4.1.2</version>
+		</dependency>
+	  	<!-- https://mvnrepository.com/artifact/org.apache.poi/poi-ooxml -->
+		<dependency>
+		    <groupId>org.apache.poi</groupId>
+		    <artifactId>poi-ooxml</artifactId>
+		    <version>4.1.2</version>
+		</dependency>  	
+  </dependencies>
+	 */
+	
+	
+	public static String[] listFileNames(String folderName) throws FileNotFoundException {		// can set the folder name as a constant IF we choose to store the questions in the project folder*
+		String[] files;
+		File folder = new File(folderName);
+		files = folder.list();
+		
+		return files;
+	}
+	
+	
+	/*
+	 * Read the contents of the file... 
+	 */
+	
+	public static String readFile(String fileName) {
+		
+		StringBuilder question = new StringBuilder();
+		
+		try {
+            File file = new File(fileName);
+            FileInputStream fis = new FileInputStream("src/QuestionsForPreliminaryTesting/" + file);
+
+            XWPFDocument document = new XWPFDocument(fis);
+
+            List<XWPFParagraph> paragraphs = document.getParagraphs();
+
+
+            for (XWPFParagraph para : paragraphs) {
+                question.append(para.getText());
+            }
+            fis.close();
+            document.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+		System.out.println(question);
+		return question.toString();
+	}
+
+	
+	
+	
+	/*
+	 * Redo Method to delimit a string into an array of questions using some char and create the word doc from it
+	 */
+	
+	public static void writeFile(String folderName, String fileName, String[] questions, String professorName, String courseName) throws IOException {
+		
+		File folder = new File(folderName);
+		if (!folder.exists()) {
+			folder.mkdir();
+			System.out.println("Creating " + folderName + "... ");
+		}
+		
+		FileOutputStream fos = new FileOutputStream(new File(folderName + fileName));
+		XWPFDocument document = new XWPFDocument();
+
+		// write the paragraph for the heading stuff		
+		XWPFParagraph heading = document.createParagraph();
+		XWPFRun nameRun = heading.createRun();
+		nameRun.setText("Name ___________");
+		nameRun.addCarriageReturn();
+		
+		XWPFRun professorRun = heading.createRun();
+		professorRun.setText(professorName);
+		professorRun.addCarriageReturn();
+	
+		XWPFRun courseRun = heading.createRun();
+		courseRun.setText(courseName);
+		courseRun.addCarriageReturn();
+		
+		// write the paragraphs for the questions
+		XWPFParagraph tempParagraph = document.createParagraph();
+		for (int questionNum = 1; questionNum <= questions.length; questionNum++) {
+
+			
+			XWPFRun tempRun = tempParagraph.createRun();
+			tempRun.setText(questionNum + ". " + readFile(questions[questionNum - 1]));
+			tempRun.addCarriageReturn();
+			tempRun.addCarriageReturn();
+			
+		}
+		document.write(fos);
+		fos.close();
+		document.close();
+
+	}
 }
