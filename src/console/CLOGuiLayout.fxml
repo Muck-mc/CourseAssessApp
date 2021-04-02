@@ -85,19 +85,25 @@
                <children>
                   <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="541.0" prefWidth="646.0">
                      <children>
-                        <AnchorPane fx:id="testPane" layoutX="175.0" layoutY="190.0" prefHeight="159.0" prefWidth="300.0" visible="false">
+                        <AnchorPane fx:id="testPane" layoutX="94.0" layoutY="190.0" prefHeight="218.0" prefWidth="446.0">
                            <children>
-                              <Button layoutX="123.0" layoutY="138.0" mnemonicParsing="false" onAction="#createTest" text="Start" />
-                              <Button layoutX="218.0" layoutY="138.0" mnemonicParsing="false" onAction="#cancelTest" text="Cancel" />
-                              <TextField fx:id="lenNum" layoutX="139.0" layoutY="88.0" promptText="5-25" />
-                              <TextField fx:id="difNum" layoutX="139.0" layoutY="45.0" promptText="0-5" />
+                              <Button layoutX="129.0" layoutY="173.0" mnemonicParsing="false" onAction="#createTest" text="Start" />
+                              <Button layoutX="218.0" layoutY="173.0" mnemonicParsing="false" onAction="#cancelTest" text="Cancel" />
+                              <TextField fx:id="lenNum" layoutX="139.0" layoutY="88.0" prefHeight="27.0" prefWidth="60.0" promptText="5-25" />
+                              <TextField fx:id="difNum" layoutX="139.0" layoutY="45.0" prefHeight="27.0" prefWidth="58.0" promptText="0-5" />
                               <Text layoutX="10.0" layoutY="105.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Test Length(5-25):" />
                               <Text layoutX="10.0" layoutY="60.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Difficulty Rating(0-5):" />
-                              <Text layoutX="114.0" layoutY="28.0" strokeType="OUTSIDE" strokeWidth="0.0" text="New Test">
+                              <Text layoutX="187.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" text="New Test">
                                  <font>
                                     <Font size="18.0" />
                                  </font>
                               </Text>
+                              <Text layoutX="212.0" layoutY="60.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Professor:" />
+                              <Text layoutX="212.0" layoutY="103.0" strokeType="OUTSIDE" strokeWidth="0.0" text="File Name:" />
+                              <TextField fx:id="profName" layoutX="275.0" layoutY="45.0" prefHeight="27.0" prefWidth="144.0" promptText="Dr. Frankestein" />
+                              <TextField fx:id="fileName" layoutX="275.0" layoutY="86.0" prefHeight="27.0" prefWidth="144.0" promptText="Name Me" />
+                              <Text layoutX="212.0" layoutY="143.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Course:" />
+                              <TextField fx:id="course" layoutX="275.0" layoutY="125.0" prefHeight="27.0" prefWidth="144.0" promptText="ex: CSE118" />
                            </children>
                         </AnchorPane>
                         <TextArea fx:id="createdTest" disable="true" layoutX="114.0" layoutY="35.0" prefHeight="500.0" prefWidth="529.0" visible="false" wrapText="true" />

@@ -13,14 +13,28 @@ import org.apache.poi.xwpf.usermodel.XWPFRun;
 
 public class Test {
 	
+	/*
+	 * @param difNum difficulty Number
+	 * @param lenNum length Number
+	 * @param fileName make your file name
+	 * @param course course name
+	 * 
+	 */
+	
 	private int difNum;
 	private int lenNum;
+	private String fileName;
+	private String profName;
+	private String course;
 	private String[] testQuestions;
 	
-	public Test(int difNum, int lenNum) throws FileNotFoundException {
+	public Test(int difNum, int lenNum, String fileName, String profName, String course) throws FileNotFoundException {
 		super();
 		this.difNum = difNum;
 		this.lenNum = lenNum;
+		this.fileName = fileName;
+		this.profName = profName;
+		this.course = course;
 		
 //		this.testQuestions = algorithm.RunAlg(); // this will return a string arr of questions for now im using a relative folder in next line
 		this.testQuestions = listFileNames("src/QuestionsForPreliminaryTesting");
@@ -31,8 +45,10 @@ public class Test {
 		System.out.println("testing");
 		System.out.println(difNum);
 		System.out.println(lenNum);
+		System.out.println(fileName);
+		System.out.println(profName);
 		
-		writeFile("TestCreated/", "UneditedTestCreated.docx", testQuestions, "Professor Li", "CSE118");
+		writeFile("TestCreated/", fileName + ".docx", testQuestions, profName, "CSE118");
 		
 		String testFormatted = new String();
 		

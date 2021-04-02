@@ -13,6 +13,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.ComboBox;
@@ -35,7 +36,7 @@ import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.HBox;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
-
+import javafx.stage.FileChooser;
 import resources.CSResource;
 
 public class CLOLayoutController implements Initializable {
@@ -46,7 +47,8 @@ public class CLOLayoutController implements Initializable {
 	private final Node cseIcon01 = new ImageView(new Image(getClass().getResourceAsStream("CSE118.png")));
 	private final Node cseIcon02 = new ImageView(new Image(getClass().getResourceAsStream("CSE02.png")));
 	private final Node cseIcon03 = new ImageView(new Image(getClass().getResourceAsStream("CSE03.png")));
-
+	private Test test = null;
+	
 	@FXML
 	private WebView webViewer;
 	@FXML
@@ -62,11 +64,18 @@ public class CLOLayoutController implements Initializable {
 	@FXML
 	private TextField lenNum;
 	@FXML
+	private TextField profName;
+	@FXML
+	private TextField fileName;
+	@FXML
+	private TextField course;
+	@FXML
 	private AnchorPane testPane;
 	@FXML
 	private TextArea createdTest;
 	@FXML
 	private Button cancelBtn;
+	
 
 	// private ScrollPane spContainer;
 	WebView browser = null;
@@ -148,15 +157,37 @@ public class CLOLayoutController implements Initializable {
 		event.consume();
 
 	}
+	@FXML
+	private void save(ActionEvent event) {
+		FileChooser chooser = new FileChooser();
+		chooser.setTitle("Save");
+		FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Document files (*.docx)", "*.docx");
+        chooser.getExtensionFilters().add(extFilter);
+       
+        File file = chooser.showSaveDialog(cancelBtn.getScene().getWindow());
+        
+        saveFile(file);
+        
+        
+	}
 
+	private void saveFile(File file) {
+		//TODO save file using filewriter or Docx API?
+	}
 	@FXML
 	private void createTest(ActionEvent event) throws IOException {
 		Alert alert = new Alert(AlertType.WARNING);
 		int dif = -1;
 		int len = -1;
+		String prof = "";
+		String file = "";
+		String crse = "";
 		try {
 			dif = Integer.parseInt(difNum.getText());
 			len = Integer.parseInt(lenNum.getText());
+			prof = profName.getText();
+			file = fileName.getText();
+			crse = course.getText();
 			if (dif < 0 || dif > 5) {
 				event.consume();
 				alert.setContentText("Difficulty not within range");
@@ -167,8 +198,12 @@ public class CLOLayoutController implements Initializable {
 				alert.setContentText("Length not within range");
 				alert.show();
 
+			} else if(prof == null || file == null || crse == null) {
+				event.consume();
+				alert.setContentText("Please check Professor, Course, fileName");
+				alert.show();
 			} else {
-				Test test = new Test(dif, len);
+				test = new Test(dif, len, prof, file, crse);
 				createdTest.setText(test.testMe());
 				createdTest.setVisible(true);
 				createdTest.setDisable(false);
