@@ -161,8 +161,10 @@ public class CLOLayoutController implements Initializable {
 	private void save(ActionEvent event) {
 		FileChooser chooser = new FileChooser();
 		chooser.setTitle("Save");
+		chooser.setInitialFileName(fileName.getText());
 		FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Document files (*.docx)", "*.docx");
         chooser.getExtensionFilters().add(extFilter);
+        
        
         File file = chooser.showSaveDialog(cancelBtn.getScene().getWindow());
         
