@@ -200,7 +200,7 @@ public class CLOLayoutController implements Initializable {
 				alert.setContentText("Length not within range");
 				alert.show();
 
-			} else if(prof == null || file == null || crse == null) {
+			} else if(prof.isBlank() || file.isBlank() || crse.isBlank()) {
 				event.consume();
 				alert.setContentText("Please check Professor, Course, fileName");
 				alert.show();

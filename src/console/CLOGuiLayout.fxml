@@ -101,9 +101,9 @@
                               <Text layoutX="212.0" layoutY="60.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Professor:" />
                               <Text layoutX="212.0" layoutY="103.0" strokeType="OUTSIDE" strokeWidth="0.0" text="File Name:" />
                               <TextField fx:id="profName" layoutX="275.0" layoutY="45.0" prefHeight="27.0" prefWidth="144.0" promptText="Dr. Frankestein" />
-                              <TextField fx:id="fileName" layoutX="275.0" layoutY="86.0" prefHeight="27.0" prefWidth="144.0" promptText="Name Me" />
+                              <TextField fx:id="fileName" layoutX="275.0" layoutY="86.0" prefHeight="27.0" prefWidth="144.0" promptText="Monster" />
                               <Text layoutX="212.0" layoutY="143.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Course:" />
-                              <TextField fx:id="course" layoutX="275.0" layoutY="125.0" prefHeight="27.0" prefWidth="144.0" promptText="ex: CSE118" />
+                              <TextField fx:id="course" layoutX="275.0" layoutY="125.0" prefHeight="27.0" prefWidth="144.0" promptText="PHL211" />
                            </children>
                         </AnchorPane>
                         <TextArea fx:id="createdTest" disable="true" layoutX="114.0" layoutY="35.0" prefHeight="500.0" prefWidth="529.0" visible="false" wrapText="true" />
