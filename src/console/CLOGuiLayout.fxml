@@ -108,6 +108,7 @@
                         </AnchorPane>
                         <TextArea fx:id="createdTest" disable="true" layoutX="114.0" layoutY="35.0" prefHeight="500.0" prefWidth="529.0" visible="false" wrapText="true" />
                         <Button fx:id="cancelBtn" layoutX="28.0" layoutY="486.0" mnemonicParsing="false" onAction="#cancel" text="Cancel" />
+                        <Button layoutX="32.0" layoutY="443.0" mnemonicParsing="false" onAction="#save" text="Save" />
                      </children></AnchorPane>
                   <WebView fx:id="webViewer" disable="true" layoutX="14.0" layoutY="14.0" prefHeight="429.0" prefWidth="566.0" visible="false" AnchorPane.bottomAnchor="4.0" AnchorPane.leftAnchor="4.0" AnchorPane.rightAnchor="4.0" AnchorPane.topAnchor="4.0" />
                </children>
