@@ -36,11 +36,60 @@ public class Test {
 		this.profName = profName;
 		this.course = course;
 		
-//		this.testQuestions = algorithm.RunAlg(); // this will return a string arr of questions for now im using a relative folder in next line
+//		this.testQuestions = Algorithm.RunAlg(difNum, lenNum, /*Folder Name? *'); // this will return a string arr of questions for now im using a relative folder in next line
 		this.testQuestions = listFileNames("src/QuestionsForPreliminaryTesting");
 	}
 
 
+	public int getDifNum() {
+		return difNum;
+	}
+
+	public void setDifNum(int difNum) {
+		this.difNum = difNum;
+	}
+
+	public int getLenNum() {
+		return lenNum;
+	}
+
+	public void setLenNum(int lenNum) {
+		this.lenNum = lenNum;
+	}
+
+	public String getFileName() {
+		return fileName;
+	}
+
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
+	}
+
+	public String getProfName() {
+		return profName;
+	}
+
+	public void setProfName(String profName) {
+		this.profName = profName;
+	}
+
+	public String getCourse() {
+		return course;
+	}
+
+	public void setCourse(String course) {
+		this.course = course;
+	}
+
+	public String[] getTestQuestions() {
+		return testQuestions;
+	}
+
+	public void setTestQuestions(String[] testQuestions) {
+		this.testQuestions = testQuestions;
+	}
+
+	
 	public String testMe() throws IOException {
 		System.out.println("testing");
 		System.out.println(difNum);
@@ -52,7 +101,7 @@ public class Test {
 		
 		String testFormatted = new String();
 		
-		testFormatted += "Name:_________ \nProfessor Li \nCSE118\n\n"; // this will allow an input of Prof Name
+		testFormatted += "Name:_________ \n"+ profName +" \n" + course + "\n\n"; // this will allow an input of Prof Name
 		
 		for (int i = 0; i < this.testQuestions.length;i++) {
 			testFormatted += i+". " + readFile(testQuestions[i]) + "\n\n";
@@ -60,26 +109,6 @@ public class Test {
 //		return "testing " + "Dif:"+difNum + " len:" + lenNum +"\n" + testFormatted;
 		return testFormatted;
 	}
-	
-	
-	/* 
-	 * Maven dependencies pom.xml file
-	 * 
-   <dependencies>
-		<!-- https://mvnrepository.com/artifact/org.apache.poi/poi-ooxml -->
-		<dependency>
-			<groupId>org.apache.poi</groupId>
-			<artifactId>poi-ooxml</artifactId>
-			<version>4.1.2</version>
-		</dependency>
-	  	<!-- https://mvnrepository.com/artifact/org.apache.poi/poi-ooxml -->
-		<dependency>
-		    <groupId>org.apache.poi</groupId>
-		    <artifactId>poi-ooxml</artifactId>
-		    <version>4.1.2</version>
-		</dependency>  	
-  </dependencies>
-	 */
 	
 	
 	public static String[] listFileNames(String folderName) throws FileNotFoundException {		// can set the folder name as a constant IF we choose to store the questions in the project folder*
@@ -127,12 +156,12 @@ public class Test {
 	 * Redo Method to delimit a string into an array of questions using some char and create the word doc from it
 	 */
 	
-	public static void writeFile(String folderName, String fileName, String[] questions, String professorName, String courseName) throws IOException {
+	public static void writeFile(String folderName, String fileName, String[] questions/*(filename)*/, String professorName, String courseName) throws IOException {
 		
 		File folder = new File(folderName);
 		if (!folder.exists()) {
 			folder.mkdir();
-			System.out.println("Creating " + folderName + "... ");
+//			System.out.println("Creating " + folderName + "... ");
 		}
 		
 		FileOutputStream fos = new FileOutputStream(new File(folderName + fileName));

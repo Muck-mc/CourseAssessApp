@@ -44,7 +44,12 @@ public class CLOLayoutController implements Initializable {
 
 	ObservableList<String> loginList = FXCollections.observableArrayList(CSResource.strGUEST, CSResource.strFACULTY,
 			CSResource.strADMINISTOR);
-
+	/*
+	 * contains the textfields that will be dynamically created and pushed to view when a test has been generated
+	 */
+	private LinkedList<String> questions; 
+	private LinkedList<TextField> questionFields;
+	
 	private final Node cseIcon01 = new ImageView(new Image(getClass().getResourceAsStream("CSE118.png")));
 	private final Node cseIcon02 = new ImageView(new Image(getClass().getResourceAsStream("CSE02.png")));
 	private final Node cseIcon03 = new ImageView(new Image(getClass().getResourceAsStream("CSE03.png")));
@@ -208,10 +213,31 @@ public class CLOLayoutController implements Initializable {
 			} else {
 				test = new Test(dif, len, prof, file, crse);
 				createdTest.setText(test.testMe());
+				questionFields = new LinkedList<TextField>();
 				/*
 				 * createFields(LL<String> strings);
 				 * create loop of textfields for values of question Names
 				 */
+
+				/*
+				 * populates questionFields(LL <TextFields>) with the textField containing a question (not question name).
+				 * 
+				 * Inside the loop the container can have the element added to it (the container) to be displayed in the view
+				 * 
+				 * Additional TextFields can be added to the container with "CONTAINERNAME.getChildren().add(new TextField());
+				 */
+				for (int i = 0 ; i < len; i++) {
+					TextField newTextField = new TextField(Test.readFile(test.getTestQuestions()[i]));
+					questionFields.add(newTextField);
+					
+//					System.out.println(Test.readFile(test.getTestQuestions()[i]));
+					/*
+					 * the container will likely be a VBOX or something similar, maybe something scrollable
+					 */
+					// CONTAINERNAME.getChildren().add(newTextField);
+				}
+
+				
 				createdTest.setVisible(true);
 				createdTest.setDisable(false);
 				cancelBtn.setVisible(true);
