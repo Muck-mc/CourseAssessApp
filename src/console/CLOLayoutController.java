@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
+import java.util.LinkedList;
 import java.util.ResourceBundle;
 
 import javafx.beans.value.ChangeListener;
@@ -207,6 +208,10 @@ public class CLOLayoutController implements Initializable {
 			} else {
 				test = new Test(dif, len, prof, file, crse);
 				createdTest.setText(test.testMe());
+				/*
+				 * createFields(LL<String> strings);
+				 * create loop of textfields for values of question Names
+				 */
 				createdTest.setVisible(true);
 				createdTest.setDisable(false);
 				cancelBtn.setVisible(true);
@@ -218,6 +223,9 @@ public class CLOLayoutController implements Initializable {
 			event.consume();
 		}
 
+	}
+	private void createFields(LinkedList<String> strings) {
+		
 	}
 
 	private void initializeCLOTreeView() {
