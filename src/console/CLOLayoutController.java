@@ -174,6 +174,11 @@ public class CLOLayoutController implements Initializable {
        
         File file = chooser.showSaveDialog(cancelBtn.getScene().getWindow());
         
+        /*
+         * create test using Test.writeFile(String folderName, String fileName, String[] questions, String professorName, String courseName)
+         * Im not sure how to save to the 'File file' chooser creates
+         */
+        
         saveFile(file);
         
         

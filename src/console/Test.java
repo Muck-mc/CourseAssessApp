@@ -156,7 +156,7 @@ public class Test {
 	 * Redo Method to delimit a string into an array of questions using some char and create the word doc from it
 	 */
 	
-	public static void writeFile(String folderName, String fileName, String[] questions/*(filename)*/, String professorName, String courseName) throws IOException {
+	public static void writeFile(String folderName, String fileName, String[] questions/*(question content)*/, String professorName, String courseName) throws IOException {
 		
 		File folder = new File(folderName);
 		if (!folder.exists()) {
@@ -187,7 +187,7 @@ public class Test {
 
 			
 			XWPFRun tempRun = tempParagraph.createRun();
-			tempRun.setText(questionNum + ". " + readFile(questions[questionNum - 1]));
+			tempRun.setText(questionNum + ". " + questions[questionNum - 1]);
 			tempRun.addCarriageReturn();
 			tempRun.addCarriageReturn();
 			
