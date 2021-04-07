@@ -16,6 +16,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ScrollPane;
@@ -34,6 +35,7 @@ import javafx.scene.layout.BackgroundImage;
 import javafx.scene.layout.BackgroundPosition;
 import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
@@ -81,6 +83,10 @@ public class CLOLayoutController implements Initializable {
 	private TextArea createdTest;
 	@FXML
 	private Button cancelBtn;
+	@FXML
+	private Button saveBtn;
+	@FXML
+	private ScrollPane scrollView;
 	
 
 	// private ScrollPane spContainer;
@@ -133,11 +139,26 @@ public class CLOLayoutController implements Initializable {
 	private void testScene(ActionEvent event) {
 		webViewer.setDisable(true);
 		webViewer.setVisible(false);
-
-		testPane.setDisable(false);
-		testPane.setVisible(true);
-		cancelBtn.setVisible(false);
-		event.consume();
+		
+		if(!testPane.isVisible()) {
+			scrollView.setVisible(false);
+			scrollView.setDisable(true);
+			testPane.setDisable(false);
+			testPane.setVisible(true);
+			cancelBtn.setVisible(true);
+			cancelBtn.setDisable(false);
+			event.consume();	
+		}else {
+			scrollView.setVisible(false);
+			scrollView.setDisable(true);
+			profName.setText("");
+			fileName.setText("");
+			course.setText("");
+			difNum.setText("");
+			lenNum.setText("");
+		}
+		
+		
 	}
 
 	@FXML
@@ -152,14 +173,17 @@ public class CLOLayoutController implements Initializable {
 
 	@FXML
 	private void cancel(ActionEvent event) {
-		webViewer.setDisable(false);
-		webViewer.setVisible(true);
 
-		testPane.setDisable(true);
-		testPane.setVisible(false);
-		createdTest.setDisable(true);
-		createdTest.setVisible(false);
+		testPane.setDisable(false);
+		testPane.setVisible(true);
+//		createdTest.setDisable(true);
+//		createdTest.setVisible(false);
+		saveBtn.setVisible(false);
+		saveBtn.setDisable(true);
 		cancelBtn.setVisible(false);
+		cancelBtn.setDisable(true);
+		scrollView.setVisible(false);
+		scrollView.setDisable(true);
 		event.consume();
 
 	}
@@ -173,19 +197,19 @@ public class CLOLayoutController implements Initializable {
         
        
         File file = chooser.showSaveDialog(cancelBtn.getScene().getWindow());
-        
-        /*
-         * create test using Test.writeFile(String folderName, String fileName, String[] questions, String professorName, String courseName)
-         * Im not sure how to save to the 'File file' chooser creates
-         */
-        
-        saveFile(file);
+        try {
+			test.writeFile(file, profName.getText(), course.getText());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
         
         
 	}
 
 	private void saveFile(File file) {
 		//TODO save file using filewriter or Docx API?
+		
 	}
 	@FXML
 	private void createTest(ActionEvent event) throws IOException {
@@ -217,12 +241,9 @@ public class CLOLayoutController implements Initializable {
 				alert.show();
 			} else {
 				test = new Test(dif, len, prof, file, crse);
-				createdTest.setText(test.testMe());
+				//createdTest.setText(test.testMe());
 				questionFields = new LinkedList<TextField>();
-				/*
-				 * createFields(LL<String> strings);
-				 * create loop of textfields for values of question Names
-				 */
+				GridPane grid = new GridPane();
 
 				/*
 				 * populates questionFields(LL <TextFields>) with the textField containing a question (not question name).
@@ -231,21 +252,27 @@ public class CLOLayoutController implements Initializable {
 				 * 
 				 * Additional TextFields can be added to the container with "CONTAINERNAME.getChildren().add(new TextField());
 				 */
-				for (int i = 0 ; i < len; i++) {
+				for (int i = 0 ; i < test.getTestQuestions().length; i++) {
 					TextField newTextField = new TextField(Test.readFile(test.getTestQuestions()[i]));
 					questionFields.add(newTextField);
+					newTextField.setMaxWidth(600);
+					newTextField.setPrefWidth(600);
+					newTextField.setEditable(false);
 					
-//					System.out.println(Test.readFile(test.getTestQuestions()[i]));
-					/*
-					 * the container will likely be a VBOX or something similar, maybe something scrollable
-					 */
-					// CONTAINERNAME.getChildren().add(newTextField);
+					Button minus = new Button("-");
+					grid.add(minus, 0, i);
+					grid.add(newTextField, 1, i);
+					grid.setPadding(new Insets(10));
 				}
-
-				
-				createdTest.setVisible(true);
-				createdTest.setDisable(false);
+				scrollView.setPrefWidth(650);
+				scrollView.setContent(grid);
+				scrollView.setVisible(true);
+				scrollView.setDisable(false);
+				testPane.setVisible(false);
+				//createdTest.setVisible(true);
+				//createdTest.setDisable(false);
 				cancelBtn.setVisible(true);
+				saveBtn.setVisible(true);
 			}
 		} catch (NumberFormatException e) {
 			e.printStackTrace();
@@ -253,10 +280,6 @@ public class CLOLayoutController implements Initializable {
 			alert.show();
 			event.consume();
 		}
-
-	}
-	private void createFields(LinkedList<String> strings) {
-		
 	}
 
 	private void initializeCLOTreeView() {

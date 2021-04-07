@@ -97,7 +97,7 @@ public class Test {
 		System.out.println(fileName);
 		System.out.println(profName);
 		
-		writeFile("TestCreated/", fileName + ".docx", testQuestions, profName, "CSE118");
+		//writeFile("TestCreated/", fileName + ".docx", testQuestions, profName, "CSE118");
 		
 		String testFormatted = new String();
 		
@@ -156,15 +156,10 @@ public class Test {
 	 * Redo Method to delimit a string into an array of questions using some char and create the word doc from it
 	 */
 	
-	public static void writeFile(String folderName, String fileName, String[] questions/*(question content)*/, String professorName, String courseName) throws IOException {
+	public void writeFile(File file /*String[] questions (question content)*/, String professorName, String courseName) throws IOException {
 		
-		File folder = new File(folderName);
-		if (!folder.exists()) {
-			folder.mkdir();
-//			System.out.println("Creating " + folderName + "... ");
-		}
 		
-		FileOutputStream fos = new FileOutputStream(new File(folderName + fileName));
+		FileOutputStream fos = new FileOutputStream(file);
 		XWPFDocument document = new XWPFDocument();
 
 		// write the paragraph for the heading stuff		
@@ -183,11 +178,11 @@ public class Test {
 		
 		// write the paragraphs for the questions
 		XWPFParagraph tempParagraph = document.createParagraph();
-		for (int questionNum = 1; questionNum <= questions.length; questionNum++) {
+		for (int questionNum = 1; questionNum <= testQuestions.length; questionNum++) {
 
 			
 			XWPFRun tempRun = tempParagraph.createRun();
-			tempRun.setText(questionNum + ". " + questions[questionNum - 1]);
+			tempRun.setText(questionNum + ". " + testQuestions[questionNum - 1]);
 			tempRun.addCarriageReturn();
 			tempRun.addCarriageReturn();
 			
