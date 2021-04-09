@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
@@ -156,7 +157,7 @@ public class Test {
 	 * Redo Method to delimit a string into an array of questions using some char and create the word doc from it
 	 */
 	
-	public void writeFile(File file /*String[] questions (question content)*/, String professorName, String courseName) throws IOException {
+	public void writeFile(File file /*String[] questions (question content)*/, String professorName, String courseName, LinkedList<String> strings) throws IOException {
 		
 		
 		FileOutputStream fos = new FileOutputStream(file);
@@ -178,11 +179,11 @@ public class Test {
 		
 		// write the paragraphs for the questions
 		XWPFParagraph tempParagraph = document.createParagraph();
-		for (int questionNum = 1; questionNum <= testQuestions.length; questionNum++) {
+		for (int questionNum = 1; questionNum <= strings.size(); questionNum++) {
 
 			
 			XWPFRun tempRun = tempParagraph.createRun();
-			tempRun.setText(questionNum + ". " + testQuestions[questionNum - 1]);
+			tempRun.setText(questionNum + ". " + strings.get(questionNum));
 			tempRun.addCarriageReturn();
 			tempRun.addCarriageReturn();
 			

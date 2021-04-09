@@ -176,8 +176,6 @@ public class CLOLayoutController implements Initializable {
 
 		testPane.setDisable(false);
 		testPane.setVisible(true);
-//		createdTest.setDisable(true);
-//		createdTest.setVisible(false);
 		saveBtn.setVisible(false);
 		saveBtn.setDisable(true);
 		cancelBtn.setVisible(false);
@@ -198,18 +196,19 @@ public class CLOLayoutController implements Initializable {
        
         File file = chooser.showSaveDialog(cancelBtn.getScene().getWindow());
         try {
-			test.writeFile(file, profName.getText(), course.getText());
+        	LinkedList<String> strings = new LinkedList<String>();
+        	questionFields.forEach(c->{
+        		if(!c.getText().isBlank()) {
+        			strings.add(c.getText());
+        		}
+        	});
+			test.writeFile(file, profName.getText(), course.getText(), strings);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
         
         
-	}
-
-	private void saveFile(File file) {
-		//TODO save file using filewriter or Docx API?
-		
 	}
 	@FXML
 	private void createTest(ActionEvent event) throws IOException {
@@ -260,17 +259,40 @@ public class CLOLayoutController implements Initializable {
 					newTextField.setEditable(false);
 					
 					Button minus = new Button("-");
+					minus.setId(Integer.toString(i));
+					minus.setOnAction(a -> {
+						LinkedList<Node> list = new LinkedList<Node>();
+						for(Node n: grid.getChildren()) {
+							if(GridPane.getRowIndex(n).equals(Integer.parseInt(minus.getId()))) {
+								list.add(n);
+							}
+							
+						}
+						grid.getChildren().removeAll(list);
+						
+					});
+					
 					grid.add(minus, 0, i);
 					grid.add(newTextField, 1, i);
-					grid.setPadding(new Insets(10));
+					grid.setPadding(new Insets(20));
+					
+					if((i+1) == test.getTestQuestions().length) {
+						Button add = new Button("+");
+						add.setId(Integer.toString(i+1));
+						add.setOnAction(a-> {
+							System.out.println("Add ME");
+							//TODO!
+						});
+						grid.add(add, 0, i+1);
+					}
+					
 				}
+				
 				scrollView.setPrefWidth(650);
 				scrollView.setContent(grid);
 				scrollView.setVisible(true);
 				scrollView.setDisable(false);
 				testPane.setVisible(false);
-				//createdTest.setVisible(true);
-				//createdTest.setDisable(false);
 				cancelBtn.setVisible(true);
 				saveBtn.setVisible(true);
 			}
