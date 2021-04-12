@@ -287,7 +287,6 @@ public class CLOLayoutController implements Initializable {
 					}
 					
 				}
-				
 				scrollView.setPrefWidth(650);
 				scrollView.setContent(grid);
 				scrollView.setVisible(true);
