@@ -37,8 +37,8 @@ public class Test {
 		this.profName = profName;
 		this.course = course;
 		
-//		this.testQuestions = Algorithm.RunAlg(difNum, lenNum, /*Folder Name? *'); // this will return a string arr of questions for now im using a relative folder in next line
-		this.testQuestions = listFileNames("src/QuestionsForPreliminaryTesting");
+		this.testQuestions = Algorithm.runAlg(lenNum, difNum, difNum, "src/QuestionsForPreliminaryTesting"); // this will return a string arr of questions for now im using a relative folder in next line
+//		this.testQuestions = listFileNames("src/QuestionsForPreliminaryTesting");
 	}
 
 
