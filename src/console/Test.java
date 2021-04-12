@@ -28,6 +28,8 @@ public class Test {
 	private String profName;
 	private String course;
 	private String[] testQuestions;
+	private static String folderName = "src/QuestionsForPreliminaryTesting/";
+//	private static String folderName = "src/QuestionSetForDemo/";
 	
 	public Test(int difNum, int lenNum, String fileName, String profName, String course) throws FileNotFoundException {
 		super();
@@ -38,7 +40,7 @@ public class Test {
 		this.course = course;
 		
 		this.testQuestions = Algorithm.runAlg(lenNum, difNum, difNum, "src/QuestionsForPreliminaryTesting"); // this will return a string arr of questions for now im using a relative folder in next line
-//		this.testQuestions = listFileNames("src/QuestionsForPreliminaryTesting");
+//		this.testQuestions = listFileNames("src/QuestionSetForDemo");
 	}
 
 
@@ -131,7 +133,7 @@ public class Test {
 		
 		try {
             File file = new File(fileName);
-            FileInputStream fis = new FileInputStream("src/QuestionsForPreliminaryTesting/" + file);
+            FileInputStream fis = new FileInputStream(folderName + file);
 
             XWPFDocument document = new XWPFDocument(fis);
 
