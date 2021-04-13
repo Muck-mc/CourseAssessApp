@@ -50,9 +50,7 @@ public class CLOLayoutController implements Initializable {
 
 	ObservableList<String> loginList = FXCollections.observableArrayList(CSResource.strGUEST, CSResource.strFACULTY,
 			CSResource.strADMINISTOR);
-	/*
-	 * contains the textfields that will be dynamically created and pushed to view when a test has been generated
-	 */
+	
 	private LinkedList<String> questions; 
 	private LinkedList<TextArea> questionFields;
 	
@@ -60,6 +58,7 @@ public class CLOLayoutController implements Initializable {
 	private final Node cseIcon02 = new ImageView(new Image(getClass().getResourceAsStream("CSE02.png")));
 	private final Node cseIcon03 = new ImageView(new Image(getClass().getResourceAsStream("CSE03.png")));
 	private Test test = null;
+	private WebView browser = null;
 	
 	@FXML
 	private WebView webViewer;
@@ -91,10 +90,6 @@ public class CLOLayoutController implements Initializable {
 	private Button saveBtn;
 	@FXML
 	private ScrollPane scrollView;
-	
-
-	// private ScrollPane spContainer;
-	WebView browser = null;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -104,19 +99,6 @@ public class CLOLayoutController implements Initializable {
 
 		try {
 
-			/*
-			 * if (cseIcon01 == null) { String icon01Path = currWorkPath +
-			 * "\\bin\\resources\\images\\" + CSResource.strCSE118Icon; cseIcon01 = new
-			 * ImageView(new Image(new FileInputStream(icon01Path)));
-			 * 
-			 * String icon02Path = currWorkPath + "\\bin\\resources\\images\\" +
-			 * CSResource.strCSE118BKGD02; cseIcon02 = new ImageView(new Image(new
-			 * FileInputStream(icon02Path)));
-			 * 
-			 * String icon03Path = currWorkPath + "\\bin\\resources\\images\\" +
-			 * CSResource.strCSE118BKGD03; cseIcon03 = new ImageView(new Image(new
-			 * FileInputStream(icon03Path))); }
-			 */
 
 			String pathToLogoImage = currWorkPath + "/bin/resources/images/" + CSResource.strCSE118LOGO;
 			FileInputStream scccLogoImage = new FileInputStream(pathToLogoImage);
@@ -126,7 +108,7 @@ public class CLOLayoutController implements Initializable {
 					BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
 			Background background = new Background(backgroundimage);
 			hbTop.setBackground(background);
-			// hbTop.setStyle("-fx-background-color:rgba(200, 200, 200, 0.5);");
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -135,7 +117,6 @@ public class CLOLayoutController implements Initializable {
 		cbSignOn.setItems(loginList);
 
 		initializeCLOTreeView();
-		// setupCLOTrees();
 		loadWebPage(webViewer, null);
 	}
 
@@ -208,7 +189,6 @@ public class CLOLayoutController implements Initializable {
         	});
 			test.writeFile(file, profName.getText(), course.getText(), strings);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
         
@@ -244,70 +224,65 @@ public class CLOLayoutController implements Initializable {
 				alert.show();
 			} else {
 				test = new Test(dif, len, prof, file, crse);
-				//createdTest.setText(test.testMe());
-				questionFields = new LinkedList<TextArea>();
-				GridPane grid = new GridPane();
-
-				/*
-				 * populates questionFields(LL <TextFields>) with the textField containing a question (not question name).
-				 * 
-				 * Inside the loop the container can have the element added to it (the container) to be displayed in the view
-				 * 
-				 * Additional TextFields can be added to the container with "CONTAINERNAME.getChildren().add(new TextField());
-				 */
-				for (int i = 0 ; i < test.getTestQuestions().length; i++) {
-					TextArea newTextField = new TextArea((i+1) + ") " + Test.readFile(test.getTestQuestions()[i]));
-					newTextField.setMaxWidth(600);
-					newTextField.setPrefWidth(600);
-					newTextField.setPrefHeight(100);
-					newTextField.setWrapText(true);
-					newTextField.setEditable(false);
-					questionFields.add(newTextField);
-					
-					
-					Button minus = new Button("-");
-					minus.setId(Integer.toString(i));
-					minus.setOnAction(a -> {
-						LinkedList<Node> list = new LinkedList<Node>();
-						for(Node n: grid.getChildren()) {
-							if(GridPane.getRowIndex(n).equals(Integer.parseInt(minus.getId()))) {
-								list.add(n);
-							}
-							
-						}
-						grid.getChildren().removeAll(list);
-						
-					});
-					
-					grid.add(minus, 0, i);
-					grid.add(newTextField, 1, i);
-					grid.setPadding(new Insets(20));
-					
-					if((i+1) == test.getTestQuestions().length) {
-						Button add = new Button("+");
-						add.setId(Integer.toString(i+1));
-						add.setOnAction(a-> {
-							System.out.println("Add ME");
-							//TODO!
-						});
-						grid.add(add, 0, i+1);
-					}
-					
-				}
-				scrollView.setPrefWidth(650);
-				scrollView.setContent(grid);
-				scrollView.setVisible(true);
-				scrollView.setDisable(false);
-				testPane.setVisible(false);
-				cancelBtn.setVisible(true);
-				saveBtn.setVisible(true);
-			}
+				testView(test);
+			}	
 		} catch (NumberFormatException e) {
 			e.printStackTrace();
 			alert.setContentText("Not a number!");
 			alert.show();
 			event.consume();
 		}
+	}
+	private void testView(Test test) {
+		questionFields = new LinkedList<TextArea>();
+		GridPane grid = new GridPane();
+
+		for (int i = 0 ; i < test.getTestQuestions().length; i++) {
+			TextArea newTextField = new TextArea((i+1) + ") " + Test.readFile(test.getTestQuestions()[i]));
+			newTextField.setMaxWidth(600);
+			newTextField.setPrefWidth(600);
+			newTextField.setPrefHeight(100);
+			newTextField.setWrapText(true);
+			newTextField.setEditable(false);
+			questionFields.add(newTextField);
+			
+			
+			Button minus = new Button("-");
+			minus.setId(Integer.toString(i));
+			minus.setOnAction(a -> {
+				LinkedList<Node> list = new LinkedList<Node>();
+				for(Node n: grid.getChildren()) {
+					if(GridPane.getRowIndex(n).equals(Integer.parseInt(minus.getId()))) {
+						list.add(n);
+					}
+					
+				}
+				grid.getChildren().removeAll(list);
+				
+			});
+			
+			grid.add(minus, 0, i);
+			grid.add(newTextField, 1, i);
+			grid.setPadding(new Insets(20));
+			
+			if((i+1) == test.getTestQuestions().length) {
+				Button add = new Button("+");
+				add.setId(Integer.toString(i+1));
+				add.setOnAction(a-> {
+					System.out.println("Add ME");
+					//TODO!
+				});
+				grid.add(add, 0, i+1);
+			}
+			
+		}
+		scrollView.setPrefWidth(650);
+		scrollView.setContent(grid);
+		scrollView.setVisible(true);
+		scrollView.setDisable(false);
+		testPane.setVisible(false);
+		cancelBtn.setVisible(true);
+		saveBtn.setVisible(true);
 	}
 
 	private void initializeCLOTreeView() {
