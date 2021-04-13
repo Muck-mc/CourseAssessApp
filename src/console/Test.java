@@ -14,11 +14,13 @@ import org.apache.poi.xwpf.usermodel.XWPFRun;
 
 public class Test {
 	
-	/*
+	/**
+	 * 
 	 * @param difNum difficulty Number
 	 * @param lenNum length Number
 	 * @param fileName make your file name
 	 * @param course course name
+	 * @param testQuestions filenames of all selected questions
 	 * 
 	 */
 	
