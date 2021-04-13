@@ -8,6 +8,8 @@ import java.net.URL;
 import java.util.LinkedList;
 import java.util.ResourceBundle;
 
+import com.sun.javafx.scene.control.skin.Utils;
+
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -19,6 +21,7 @@ import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Control;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -37,6 +40,7 @@ import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.text.TextBoundsType;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
@@ -50,7 +54,7 @@ public class CLOLayoutController implements Initializable {
 	 * contains the textfields that will be dynamically created and pushed to view when a test has been generated
 	 */
 	private LinkedList<String> questions; 
-	private LinkedList<TextField> questionFields;
+	private LinkedList<TextArea> questionFields;
 	
 	private final Node cseIcon01 = new ImageView(new Image(getClass().getResourceAsStream("CSE118.png")));
 	private final Node cseIcon02 = new ImageView(new Image(getClass().getResourceAsStream("CSE02.png")));
@@ -241,7 +245,7 @@ public class CLOLayoutController implements Initializable {
 			} else {
 				test = new Test(dif, len, prof, file, crse);
 				//createdTest.setText(test.testMe());
-				questionFields = new LinkedList<TextField>();
+				questionFields = new LinkedList<TextArea>();
 				GridPane grid = new GridPane();
 
 				/*
@@ -252,11 +256,14 @@ public class CLOLayoutController implements Initializable {
 				 * Additional TextFields can be added to the container with "CONTAINERNAME.getChildren().add(new TextField());
 				 */
 				for (int i = 0 ; i < test.getTestQuestions().length; i++) {
-					TextField newTextField = new TextField(Test.readFile(test.getTestQuestions()[i]));
-					questionFields.add(newTextField);
+					TextArea newTextField = new TextArea((i+1) + ") " + Test.readFile(test.getTestQuestions()[i]));
 					newTextField.setMaxWidth(600);
 					newTextField.setPrefWidth(600);
+					newTextField.setPrefHeight(100);
+					newTextField.setWrapText(true);
 					newTextField.setEditable(false);
+					questionFields.add(newTextField);
+					
 					
 					Button minus = new Button("-");
 					minus.setId(Integer.toString(i));

@@ -28,8 +28,8 @@ public class Test {
 	private String profName;
 	private String course;
 	private String[] testQuestions;
-	private static String folderName = "src/QuestionsForPreliminaryTesting/";
-//	private static String folderName = "src/QuestionSetForDemo/";
+//	private static String folderName = "src/QuestionsForPreliminaryTesting/";
+	private static String folderName = "src/QuestionSetForDemo/";
 	
 	public Test(int difNum, int lenNum, String fileName, String profName, String course) throws FileNotFoundException {
 		super();
@@ -39,8 +39,8 @@ public class Test {
 		this.profName = profName;
 		this.course = course;
 		
-		this.testQuestions = Algorithm.runAlg(lenNum, difNum, difNum, "src/QuestionsForPreliminaryTesting"); // this will return a string arr of questions for now im using a relative folder in next line
-//		this.testQuestions = listFileNames("src/QuestionSetForDemo");
+		//this.testQuestions = Algorithm.runAlg(lenNum, difNum, difNum, "src/QuestionsForPreliminaryTesting"); // this will return a string arr of questions for now im using a relative folder in next line
+		this.testQuestions = listFileNames("src/QuestionSetForDemo");
 	}
 
 
